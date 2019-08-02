@@ -10,12 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.maytheforcebewith_diogosequeira.R;
+import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
-    private ArrayList<PeopleItem> peopleList;
+    private ArrayList<CharacterRecycler> peopleList;
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
@@ -29,7 +30,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public RecyclerViewAdapter(ArrayList<PeopleItem> itemList){
+    public RecyclerViewAdapter(ArrayList<CharacterRecycler> itemList){
         peopleList = itemList;
     }
 
@@ -43,9 +44,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        PeopleItem currentItem = peopleList.get(position);
+        CharacterRecycler currentItem = peopleList.get(position);
 
-        holder.icon.setImageResource(currentItem.getIcon());
         holder.mTextView1.setText(currentItem.getName());
     }
 
