@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -54,8 +55,9 @@ public class ListFragment extends Fragment {
     private ArrayList<CharacterRecycler> recyclerViewCharacters = new ArrayList<>();
 
     //New Part
-    private EditText edSerch2;
-    private Button button;
+    private EditText searchField;
+    private Button submit;
+    private ImageView backButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,8 +73,7 @@ public class ListFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        edSerch2 = view.findViewById(R.id.editSearchBox);
-        button = view.findViewById(R.id.searchButton);
+        initComponents(view);
 
         if(!isLoaded){
             loadRecyclerViewData();
@@ -105,18 +106,32 @@ public class ListFragment extends Fragment {
                 )
         );
 
-        button.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                loadDataSearchBox(edSerch2.getText().toString());
+                loadDataSearchBox(searchField.getText().toString());
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                homeFragment();
             }
         });
 
 
 
 
+
         return view;
+    }
+
+    private void initComponents(View view){
+        searchField = view.findViewById(R.id.editSearchBox);
+        submit = view.findViewById(R.id.searchButton);
+        backButton = view.findViewById(R.id.imageBack);
     }
 
 
@@ -219,7 +234,10 @@ public class ListFragment extends Fragment {
                             bundle.putString("skin", skin);
                             uniqueCharacter.setArguments(bundle);
 
-                            //Need to call fragmentTransaction here, otherwise it will change fragments before fetching the data
+                            /*Need to call fragmentTransaction here, otherwise it will change fragments before fetching the data,
+                                 need to figure out solution
+                             */
+
 
                             nextFragment();
 
@@ -241,7 +259,7 @@ public class ListFragment extends Fragment {
 
     }
 
-    //New method to get data from searchBox
+    //New method to get data from searchBox using Retrofit instead
 
     private void loadDataSearchBox(String character) {
 
@@ -258,7 +276,7 @@ public class ListFragment extends Fragment {
             @Override
             public void onFailure(Call<CharacterResults> call, Throwable t)
             {
-                edSerch2.setText("");
+                searchField.setText("");
             }
 
             @Override
@@ -267,7 +285,7 @@ public class ListFragment extends Fragment {
                 progressDialog.dismiss();
 
                 Log.d("APIPlaceHolder", "Successfully response fetched" );
-                edSerch2.setText("");
+                searchField.setText("");
 
                 CharacterResults people = response.body();
                 String textResult;
@@ -302,6 +320,15 @@ public class ListFragment extends Fragment {
         fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
         fragmentTransaction5.commit();
 
+
+    }
+
+    private void homeFragment(){
+
+        FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction5.addToBackStack(null);
+        fragmentTransaction5.replace(R.id.main_container, new HomeFragment());
+        fragmentTransaction5.commit();
 
     }
 

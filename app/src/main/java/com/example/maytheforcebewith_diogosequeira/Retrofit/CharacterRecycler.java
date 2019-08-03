@@ -1,6 +1,5 @@
 package com.example.maytheforcebewith_diogosequeira.Retrofit;
 
-import android.widget.ImageView;
 
 public class CharacterRecycler {
 

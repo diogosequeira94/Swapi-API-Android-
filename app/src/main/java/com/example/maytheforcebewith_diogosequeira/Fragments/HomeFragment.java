@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.maytheforcebewith_diogosequeira.R;
+import com.example.maytheforcebewith_diogosequeira.Utils.FavouritesFragment;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -75,7 +76,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.button2:
-                Toast.makeText(getContext(), "Implementing...", Toast.LENGTH_SHORT).show();
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.main_container, new FavouritesFragment());
+                fragmentTransaction.commit();
+
                 break;
         }
 

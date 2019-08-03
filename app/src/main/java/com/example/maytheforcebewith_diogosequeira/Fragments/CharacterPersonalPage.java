@@ -14,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maytheforcebewith_diogosequeira.R;
-import com.example.maytheforcebewith_diogosequeira.Utils.Favourites;
 import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
+import com.example.maytheforcebewith_diogosequeira.Utils.FavouritesFragment;
 
 
 public class CharacterPersonalPage extends Fragment {
@@ -24,6 +24,7 @@ public class CharacterPersonalPage extends Fragment {
     private ImageView favouriteIcon, backButton;
     private Button sendPost;
     private boolean isToggle;
+    private String novoNome;
 
     public CharacterPersonalPage() {
         // Required empty public constructor
@@ -52,9 +53,19 @@ public class CharacterPersonalPage extends Fragment {
                     Toast.makeText(getContext(), "Added to your favourites!", Toast.LENGTH_SHORT).show();
 
                     // I need to get all the favourite Chars in Favourites Fragment and display them in a list
-                    FavouritesFragment.getFavourists().add(new CharacterRecycler(R.drawable.starwars, name.toString()));
-                    System.out.println(FavouritesFragment.getFavourists().size());
-                    isToggle = true;
+
+                    if(!sameName(novoNome)){
+
+                        FavouritesFragment.getFavourists().add(new CharacterRecycler(R.drawable.yoda, novoNome));
+                        System.out.println(novoNome);
+                        System.out.println(FavouritesFragment.getFavourists().size());
+                        isToggle = true;
+
+                    } else {
+
+                        Toast.makeText(getContext(), "Already added before!", Toast.LENGTH_SHORT);
+                    }
+
 
                 } else {
                     favouriteIcon.setImageResource(R.drawable.ic_star_border_black_24dp);
@@ -120,6 +131,7 @@ public class CharacterPersonalPage extends Fragment {
                 } else {
 
                     String nome = getArguments().getString("Titulo");
+                    novoNome = getArguments().getString("Titulo");
                     name.setText(nome);
 
                     String birthday = getArguments().getString("birth");
@@ -174,6 +186,24 @@ public class CharacterPersonalPage extends Fragment {
 
     }
 
+
+    // Method to check if there is an object with same name on the ArrayList
+    private boolean sameName(String name){
+
+        if(FavouritesFragment.getFavourists().size() != 0){
+            for(int i = 0; i < FavouritesFragment.getFavourists().size(); i++){
+
+                if(FavouritesFragment.getFavourists().get(i).getName().equals(name)){
+
+                    System.out.println("It has the same name");
+                    return true;
+                }
+            }
+        }
+
+
+        return false;
+    }
 
 
     }
