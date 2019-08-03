@@ -28,10 +28,10 @@ import com.example.maytheforcebewith_diogosequeira.R;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerItemClickListener;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerViewAdapter;
 import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterResults;
-import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterItem;
-import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
-import com.example.maytheforcebewith_diogosequeira.rest.SwapiAPIClient;
-import com.example.maytheforcebewith_diogosequeira.rest.SwapiAPI;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterItem;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
+import com.example.maytheforcebewith_diogosequeira.Rest.SwapiAPIClient;
+import com.example.maytheforcebewith_diogosequeira.Rest.SwapiAPI;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -146,7 +146,7 @@ public class ListFragment extends Fragment {
                                         ,o.getString("height"),o.getString("skin_color"),o.getString("homeworld"));
 
 
-                                recyclerViewCharacters.add(new CharacterRecycler(o.getString("name")));
+                                recyclerViewCharacters.add(new CharacterRecycler(R.drawable.r2, o.getString("name")));
 
                                 characterArrayList.add(characterItem);
 

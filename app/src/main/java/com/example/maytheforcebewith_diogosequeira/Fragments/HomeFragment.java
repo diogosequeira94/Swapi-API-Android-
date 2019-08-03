@@ -59,6 +59,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             case R.id.button1:
 
+                //User needs to have internet enabled before fragmentTransaction
+
                 if(isOnline()){
 
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();

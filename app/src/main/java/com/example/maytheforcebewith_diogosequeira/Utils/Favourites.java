@@ -1,6 +1,6 @@
 package com.example.maytheforcebewith_diogosequeira.Utils;
 
-import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
 
 import java.util.ArrayList;
 

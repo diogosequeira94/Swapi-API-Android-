@@ -1,4 +1,4 @@
-package com.example.maytheforcebewith_diogosequeira.rest;
+package com.example.maytheforcebewith_diogosequeira.Rest;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

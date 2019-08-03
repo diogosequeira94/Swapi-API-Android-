@@ -87,7 +87,10 @@ public class Character {
                 + "Hair color: " + hairColor +"\n"
                 + "Height: " + height + "\n"
                 + "Mass: " + mass + "\n"
-                + "Skin color: " + skinColor + " \n";
+                + "Skin color: " + skinColor + "\n"
+                + "Created: " + created + "\n"
+                + "Edited: " + edited + "\n"
+                + "Homeworld: " + homeWorldUrl + "\n";
     }
 
     public void setHairColor(String hairColor) {

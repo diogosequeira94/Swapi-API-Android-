@@ -1,12 +1,8 @@
 package com.example.maytheforcebewith_diogosequeira.Fragments;
 
-import android.content.Context;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -18,12 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maytheforcebewith_diogosequeira.R;
-import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerViewCharacters;
 import com.example.maytheforcebewith_diogosequeira.Utils.Favourites;
-import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterItem;
-import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
-
-import org.w3c.dom.Text;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
 
 
 public class CharacterPersonalPage extends Fragment {
@@ -32,7 +24,6 @@ public class CharacterPersonalPage extends Fragment {
     private ImageView favouriteIcon, backButton;
     private Button sendPost;
     private boolean isToggle;
-    private Favourites favourites = new Favourites();
 
     public CharacterPersonalPage() {
         // Required empty public constructor
@@ -61,9 +52,10 @@ public class CharacterPersonalPage extends Fragment {
                     Toast.makeText(getContext(), "Added to your favourites!", Toast.LENGTH_SHORT).show();
 
                     // I need to get all the favourite Chars in Favourites Fragment and display them in a list
-                    favourites.getFavouritesList().add(new CharacterRecycler(name.toString()));
-                    System.out.println(favourites.getFavouritesList().size());
+                    FavouritesFragment.getFavourists().add(new CharacterRecycler(R.drawable.starwars, name.toString()));
+                    System.out.println(FavouritesFragment.getFavourists().size());
                     isToggle = true;
+
                 } else {
                     favouriteIcon.setImageResource(R.drawable.ic_star_border_black_24dp);
                     Toast.makeText(getContext(), "Removed from your favourites", Toast.LENGTH_SHORT).show();

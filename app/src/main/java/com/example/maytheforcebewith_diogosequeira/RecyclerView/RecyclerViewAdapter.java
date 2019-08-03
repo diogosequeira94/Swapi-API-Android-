@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.maytheforcebewith_diogosequeira.R;
-import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
 
 import java.util.ArrayList;
 
@@ -46,6 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         CharacterRecycler currentItem = peopleList.get(position);
 
+        holder.icon.setImageResource(currentItem.getImage());
         holder.mTextView1.setText(currentItem.getName());
     }
 

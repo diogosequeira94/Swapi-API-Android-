@@ -1,4 +1,4 @@
-package com.example.maytheforcebewith_diogosequeira.newTryRetrofit;
+package com.example.maytheforcebewith_diogosequeira.Retrofit;
 
 public class CharacterItem {
 

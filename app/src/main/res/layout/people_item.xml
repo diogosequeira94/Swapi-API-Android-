@@ -15,24 +15,21 @@
             android:id="@+id/imageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
             android:padding="2dp" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentBottom="false"
-            android:layout_centerInParent="false"
-            android:layout_centerHorizontal="false"
-
+            android:layout_centerInParent="true"
             android:layout_marginStart="-2dp"
             android:layout_toEndOf="@+id/imageView"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
-            android:text="Sociedade Geral"
+            android:text="Character Name"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 

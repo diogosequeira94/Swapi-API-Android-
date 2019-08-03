@@ -10,11 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.maytheforcebewith_diogosequeira.R;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterItem;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavouritesFragment extends Fragment {
+
+    private static ArrayList<CharacterRecycler> favourits = new ArrayList<>();
 
 
     public FavouritesFragment() {
@@ -29,4 +35,7 @@ public class FavouritesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 
+    public static ArrayList<CharacterRecycler> getFavourists() {
+        return favourits;
+    }
 }

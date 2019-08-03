@@ -1,4 +1,4 @@
-package com.example.maytheforcebewith_diogosequeira.rest;
+package com.example.maytheforcebewith_diogosequeira.Rest;
 
 public class SwapiAPI {
 

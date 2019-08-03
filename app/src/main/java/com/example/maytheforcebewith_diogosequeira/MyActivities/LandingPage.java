@@ -1,4 +1,4 @@
-package com.example.maytheforcebewith_diogosequeira;
+package com.example.maytheforcebewith_diogosequeira.MyActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -7,6 +7,7 @@ import androidx.fragment.app.ListFragment;
 import android.os.Bundle;
 
 import com.example.maytheforcebewith_diogosequeira.Fragments.HomeFragment;
+import com.example.maytheforcebewith_diogosequeira.R;
 
 public class LandingPage extends AppCompatActivity {
 
