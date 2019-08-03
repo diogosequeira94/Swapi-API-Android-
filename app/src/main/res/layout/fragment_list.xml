@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#383838"
+    android:background="@drawable/space2"
     tools:context=".Fragments.ListFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:orientation="vertical"
         android:textAlignment="center">
 
         <TextView
@@ -27,13 +28,23 @@
             android:textColor="@android:color/white"
             android:textSize="40sp" />
 
-    </RelativeLayout>
+        <EditText
+            android:id="@+id/edSearch2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Search for the character"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:inputType="textPersonName" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_weight="3"
-        android:layout_height="0dp"
-        android:id="@+id/mrecyclerView"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mrecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

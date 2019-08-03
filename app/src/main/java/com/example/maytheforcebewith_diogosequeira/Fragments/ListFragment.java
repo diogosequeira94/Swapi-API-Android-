@@ -13,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.maytheforcebewith_diogosequeira.R;
@@ -38,13 +40,14 @@ import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
 
-    private static final String URL_DATA = "https://swapi.co/api/people";
+    private static final String URL_DATA = "https://swapi.co/api/people/";
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<CharacterItem> characterArrayList = new ArrayList<>();
     private boolean loaded;
+    private CharacterPersonalPage uniqueCharacter = new CharacterPersonalPage();
 
 
     CharactersList peopleClass = new CharactersList();
@@ -84,23 +87,7 @@ public class ListFragment extends Fragment {
                             @Override
                             public void onItemClick(View view, int position) {
 
-                                FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
-                                fragmentTransaction5.addToBackStack(null);
-                                CharacterPersonalPage uniqueCharacter = new CharacterPersonalPage();
-                                Bundle bundle = new Bundle();
-                                bundle.putString("Titulo", characterArrayList.get(position).getName());
-                                bundle.putString("birth", characterArrayList.get(position).getBirthyear());
-                                bundle.putString("eyecolor", characterArrayList.get(position).getEyeColor());
-                                bundle.putString("gender", characterArrayList.get(position).getGender());
-                                bundle.putString("hair", characterArrayList.get(position).getHairColor());
-                                bundle.putString("height", characterArrayList.get(position).getHeight());
-                                bundle.putString("homeworld", characterArrayList.get(position).getHomeWorld());
-                                bundle.putString("mass", characterArrayList.get(position).getMass());
-                                bundle.putString("skin", characterArrayList.get(position).getSkinColor());
-                                uniqueCharacter.setArguments(bundle);
-                                fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
-                                fragmentTransaction5.commit();
-
+                               loadCharacterInfo(position);
 
                             }
 
@@ -129,12 +116,85 @@ public class ListFragment extends Fragment {
         return view;
     }
 
-    //fetch the data
+    //Load specific Character from RecyclerView into fragment
+
+    private synchronized void loadCharacterInfo(final int position){
+
+        final FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction5.addToBackStack(null);
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading Character");
+        progressDialog.show();
+
+
+        //Fetching data for each position and passing it to next fragment
+
+        String url = URL_DATA + (position + 1);
+
+        final Bundle bundle = new Bundle();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        progressDialog.dismiss();
+                        try {
+
+                            String name = response.getString("name");
+                            String birthYear = response.getString("birth_year");
+                            String eyeColor = response.getString("eye_color");
+                            String gender = response.getString("gender");
+                            String hair = response.getString("hair_color");
+                            String height = response.getString("height");
+                            String homeworld = response.getString("homeworld");
+                            String mass = response.getString("mass");
+                            String skin = response.getString("skin_color");
+
+
+                            bundle.putString("Titulo", name);
+                            bundle.putString("birth", birthYear);
+                            bundle.putString("eyecolor", eyeColor);
+                            bundle.putString("gender", gender);
+                            bundle.putString("hair", hair);
+                            bundle.putString("height", height);
+                            bundle.putString("homeworld", homeworld);
+                            bundle.putString("mass", mass);
+                            bundle.putString("skin", skin);
+                            uniqueCharacter.setArguments(bundle);
+                            fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
+                            fragmentTransaction5.commit();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("Error");
+            }
+        });
+
+        RequestQueue mQueue = Volley.newRequestQueue(getContext());
+        mQueue.add(request);
+
+        // ISTO E EXECUTADO PRIMEIRO
+
+        System.out.println("yes");
+
+
+
+
+    }
+
+    //Fetch the data from RESTapi and use it in the adapter
 
     private void loadRecyclerViewData(){
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading");
+        progressDialog.setMessage("Loading List");
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
@@ -144,10 +204,10 @@ public class ListFragment extends Fragment {
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             JSONArray array = jsonObject.getJSONArray("results");
-                            System.out.println(array.length() + "AQUI");
 
                             for(int i = 0; i < array.length(); i++){
                                 JSONObject o = array.getJSONObject(i);
