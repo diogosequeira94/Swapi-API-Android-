@@ -1,7 +1,6 @@
 package com.example.maytheforcebewith_diogosequeira.Fragments;
 
 import android.app.ProgressDialog;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,11 +8,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,13 +25,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.maytheforcebewith_diogosequeira.R;
-import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerViewCharacters;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerItemClickListener;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerViewAdapter;
 import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterResults;
-import com.example.maytheforcebewith_diogosequeira.Utils.CharactersList;
 import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterItem;
 import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
+import com.example.maytheforcebewith_diogosequeira.rest.SwapiAPIClient;
 import com.example.maytheforcebewith_diogosequeira.rest.SwapiAPI;
 
 import org.json.JSONArray;
@@ -40,8 +40,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.Callback;
 
 
 public class ListFragment extends Fragment {
@@ -55,7 +54,8 @@ public class ListFragment extends Fragment {
     private ArrayList<CharacterRecycler> recyclerViewCharacters = new ArrayList<>();
 
     //New Part
-
+    private EditText edSerch2;
+    private Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +70,9 @@ public class ListFragment extends Fragment {
         adapter = new RecyclerViewAdapter(recyclerViewCharacters);
 
         recyclerView.setLayoutManager(layoutManager);
+
+        edSerch2 = view.findViewById(R.id.editSearchBox);
+        button = view.findViewById(R.id.searchButton);
 
         if(!isLoaded){
             loadRecyclerViewData();
@@ -101,6 +104,17 @@ public class ListFragment extends Fragment {
                         }
                 )
         );
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                loadDataSearchBox(edSerch2.getText().toString());
+            }
+        });
+
+
+
 
         return view;
     }
@@ -158,8 +172,6 @@ public class ListFragment extends Fragment {
     }
 
 
-
-
     //Load specific Character from RecyclerView into fragment
 
     private synchronized void loadCharacterInfo(final int position){
@@ -209,10 +221,7 @@ public class ListFragment extends Fragment {
 
                             //Need to call fragmentTransaction here, otherwise it will change fragments before fetching the data
 
-                            FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction5.addToBackStack(null);
-                            fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
-                            fragmentTransaction5.commit();
+                            nextFragment();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -232,13 +241,72 @@ public class ListFragment extends Fragment {
 
     }
 
-    /* //QUERRY
-    @GET("people")
-    Call<CharacterResults> searchPeople(@Query("search") String search);
-    */
+    //New method to get data from searchBox
+
+    private void loadDataSearchBox(String character) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading Character");
+        progressDialog.show();
+
+       final Bundle bundle = new Bundle();
+
+        Call<CharacterResults> call = SwapiAPIClient.get().searchPeople(character);
+
+        call.enqueue(new Callback<CharacterResults>()
+        {
+            @Override
+            public void onFailure(Call<CharacterResults> call, Throwable t)
+            {
+                edSerch2.setText("");
+            }
+
+            @Override
+            public void onResponse(Call<CharacterResults> call, retrofit2.Response<CharacterResults> response)
+            {
+                progressDialog.dismiss();
+
+                Log.d("APIPlaceHolder", "Successfully response fetched" );
+                edSerch2.setText("");
+
+                CharacterResults people = response.body();
+                String textResult;
+                String name;
+
+                if(people.results.size() > 0){
+
+                    textResult = people.results.get(0).toString();
+                    name = people.results.get(0).getName();
+                    System.out.println(textResult);
+
+                    bundle.putString("details", textResult);
+                    bundle.putString("newname", name);
+                    uniqueCharacter.setArguments(bundle);
+                    nextFragment();
+                }
+
+
+                else {
+
+                    Toast.makeText(getContext(),"Your request was not found!", Toast.LENGTH_SHORT).show();
+
+
+                }
+            }
+        });
+    }
+
+    private void nextFragment(){
+        FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction5.addToBackStack(null);
+        fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
+        fragmentTransaction5.commit();
+
+
+    }
+
+
+    }
 
 
 
-
-
-}

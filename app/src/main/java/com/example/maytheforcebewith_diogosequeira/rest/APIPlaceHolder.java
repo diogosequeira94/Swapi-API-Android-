@@ -9,17 +9,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface APIPlug {
+public interface APIPlaceHolder {
 
     @GET("people")
     Call<CharacterResults> searchPeople(@Query("search") String search);
-
-    @GET("people/{id}")
-    Call<List<CharacterResults>> getComments(@Path("id") String name);
-
-
-
-
 
 
 

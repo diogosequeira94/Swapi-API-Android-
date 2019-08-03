@@ -107,48 +107,78 @@ public class CharacterPersonalPage extends Fragment {
     }
 
     private void bundleSetters(){
-        String textName = getArguments().getString("Titulo");
-        name.setText(textName);
 
-        String eyeColor = getArguments().getString("eyecolor");
-        eye.setText("Eye Color: " + eyeColor);
+        Bundle bundle = getArguments();
 
-        String birthday = getArguments().getString("birth");
-        birth.setText("Birthday: " + birthday);
+        if(bundle != null){
 
-        String massa = getArguments().getString("mass");
-        mass.setText("Mass: " + massa);
 
-        String heightChar = getArguments().getString("height");
-        height.setText("Height " + heightChar);
+            //Here I check if bundle is coming via search or recyclerView index
 
-        String skinChar = getArguments().getString("skin");
-        skin.setText("Skin Color: " + skinChar);
+                if(bundle.size() == 2){
 
-        String genderChar = getArguments().getString("gender");
-        gender.setText("Gender: " + genderChar);
+                    String nome = getArguments().getString("newname");
+                    name.setText(nome);
 
-        String hairChar = getArguments().getString("hair");
-        hair.setText("Hair: " + hairChar);
+                    String details = getArguments().getString("details");
+                    birth.setText("Full details:\n\n" + details);
 
-        String homeChar = getArguments().getString("homeworld");
-        homeworld.setText("Home: " + homeChar);
+                    invisible();
+
+                } else {
+
+                    String nome = getArguments().getString("Titulo");
+                    name.setText(nome);
+
+                    String birthday = getArguments().getString("birth");
+                    birth.setText("Birthday: " + birthday);
+
+                    String eyeColor = getArguments().getString("eyecolor");
+                    eye.setText("Eye Color: " + eyeColor);
+
+                    String massa = getArguments().getString("mass");
+                    mass.setText("Mass: " + massa);
+
+                    String heightChar = getArguments().getString("height");
+                    height.setText("Height " + heightChar);
+
+                    String skinChar = getArguments().getString("skin");
+                    skin.setText("Skin Color: " + skinChar);
+
+                    String genderChar = getArguments().getString("gender");
+                    gender.setText("Gender: " + genderChar);
+
+                    String hairChar = getArguments().getString("hair");
+                    hair.setText("Hair: " + hairChar);
+
+                    String homeChar = getArguments().getString("homeworld");
+                    homeworld.setText("Home: " + homeChar);
+                }
+
+        }
+
 
     }
 
 
     private void backTransaction(){
 
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.replace(R.id.main_container, new ListFragment());
         fragmentTransaction.commit();
 
+    }
 
+    private void invisible(){
 
-
+        eye.setVisibility(View.GONE);
+        mass.setVisibility(View.GONE);
+        height.setVisibility(View.GONE);
+        skin.setVisibility(View.GONE);
+        gender.setVisibility(View.GONE);
+        hair.setVisibility(View.GONE);
+        homeworld.setVisibility(View.GONE);
 
     }
 

@@ -3,7 +3,6 @@ package com.example.maytheforcebewith_diogosequeira.Retrofit;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Character {
 
@@ -16,6 +15,32 @@ public class Character {
 
     @SerializedName("hair_color")
     public String hairColor;
+
+    public String height;
+
+    @SerializedName("homeworld")
+    public String homeWorldUrl;
+
+    public String mass;
+
+    @SerializedName("skin_color")
+    public String skinColor;
+
+    public String created;
+    public String edited;
+    public String url;
+
+    @SerializedName("films")
+    public ArrayList<String> filmsUrls;
+
+    @SerializedName("species")
+    public ArrayList<String> speciesUrls;
+
+    @SerializedName("starships")
+    public ArrayList<String> starshipsUrls;
+
+    @SerializedName("vehicles")
+    public ArrayList<String> vehiclesUrls;
 
     public ArrayList<String> getVehiclesUrls() {
         return vehiclesUrls;
@@ -149,29 +174,5 @@ public class Character {
         this.starshipsUrls = starshipsUrls;
     }
 
-    public String height;
 
-    @SerializedName("homeworld")
-    public String homeWorldUrl;
-
-    public String mass;
-
-    @SerializedName("skin_color")
-    public String skinColor;
-
-    public String created;
-    public String edited;
-    public String url;
-
-    @SerializedName("films")
-    public ArrayList<String> filmsUrls;
-
-    @SerializedName("species")
-    public ArrayList<String> speciesUrls;
-
-    @SerializedName("starships")
-    public ArrayList<String> starshipsUrls;
-
-    @SerializedName("vehicles")
-    public ArrayList<String> vehiclesUrls;
 }

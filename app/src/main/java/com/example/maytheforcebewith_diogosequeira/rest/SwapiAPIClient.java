@@ -4,36 +4,35 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class APIClient {
+public class SwapiAPIClient {
 
-    private static APIPlug REST_CLIENT;
+    private static APIPlaceHolder REST_CLIENT;
     private static final String API_URL = "http://swapi.co/api/";
+    private static final String BASE_URL = "https://swapi.co/api/people/";
 
     static {
         setupRestClient();
     }
 
-    private APIClient() {}
+    private SwapiAPIClient() {}
 
-    public static APIPlug get()
+    public static APIPlaceHolder get()
+
     {
         return REST_CLIENT;
     }
 
 
 
+    public static String getBaseUrl() {
+
+        return BASE_URL;
+    }
+
     private static void setupRestClient()
     {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        //Uncomment these lines below to start logging each request.
-
-        /*
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        httpClient.addInterceptor(logging);
-        */
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_URL)
@@ -42,7 +41,7 @@ public class APIClient {
                 .build();
 
 
-        REST_CLIENT = retrofit.create(APIPlug.class);
+        REST_CLIENT = retrofit.create(APIPlaceHolder.class);
     }
 
 }
