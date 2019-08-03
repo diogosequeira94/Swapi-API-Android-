@@ -20,8 +20,14 @@ public class LandingPage extends AppCompatActivity {
         getSupportActionBar().hide();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-       fragmentTransaction.replace(R.id.main_container, new HomeFragment());
-       fragmentTransaction.commit();
+        fragmentTransaction.replace(R.id.main_container, new HomeFragment());
+        fragmentTransaction.commit();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        
     }
 }

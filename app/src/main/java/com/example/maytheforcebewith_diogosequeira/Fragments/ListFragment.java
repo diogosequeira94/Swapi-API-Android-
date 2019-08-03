@@ -27,9 +27,11 @@ import com.example.maytheforcebewith_diogosequeira.R;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerViewCharacters;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerItemClickListener;
 import com.example.maytheforcebewith_diogosequeira.RecyclerView.RecyclerViewAdapter;
+import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterResults;
 import com.example.maytheforcebewith_diogosequeira.Utils.CharactersList;
 import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterItem;
 import com.example.maytheforcebewith_diogosequeira.newTryRetrofit.CharacterRecycler;
+import com.example.maytheforcebewith_diogosequeira.rest.SwapiAPI;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,26 +39,22 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
 
 public class ListFragment extends Fragment {
-
-    private static final String URL_DATA = "https://swapi.co/api/people/";
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<CharacterItem> characterArrayList = new ArrayList<>();
-    private boolean loaded;
+    private boolean isLoaded;
     private CharacterPersonalPage uniqueCharacter = new CharacterPersonalPage();
+    private ArrayList<CharacterRecycler> recyclerViewCharacters = new ArrayList<>();
 
-
-    CharactersList peopleClass = new CharactersList();
-    private ArrayList<CharacterRecycler> arrayOfpeople = new ArrayList<>();
-
-
-    public ListFragment() {
-        // Required empty public constructor
-    }
+    //New Part
 
 
     @Override
@@ -69,13 +67,13 @@ public class ListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new RecyclerViewAdapter(arrayOfpeople);
+        adapter = new RecyclerViewAdapter(recyclerViewCharacters);
 
         recyclerView.setLayoutManager(layoutManager);
 
-        if(!loaded){
+        if(!isLoaded){
             loadRecyclerViewData();
-            loaded = true;
+            isLoaded = true;
         }
 
 
@@ -104,41 +102,87 @@ public class ListFragment extends Fragment {
                 )
         );
 
-
-
-
-
-
-
-
-
-
         return view;
     }
+
+
+    private void loadRecyclerViewData(){
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading List");
+        progressDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                SwapiAPI.getBaseUrl(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            JSONArray array = jsonObject.getJSONArray("results");
+
+                            for(int i = 0; i < array.length(); i++){
+                                JSONObject o = array.getJSONObject(i);
+
+                                CharacterItem characterItem = new CharacterItem(
+                                        o.getString("name"),o.getString("birth_year"),o.getString("eye_color"),o.getString("gender"),o.getString("hair_color"),o.getString("mass")
+                                        ,o.getString("height"),o.getString("skin_color"),o.getString("homeworld"));
+
+
+                                recyclerViewCharacters.add(new CharacterRecycler(o.getString("name")));
+
+                                characterArrayList.add(characterItem);
+
+                                recyclerView.setAdapter(adapter);
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(stringRequest);
+
+    }
+
+
+
 
     //Load specific Character from RecyclerView into fragment
 
     private synchronized void loadCharacterInfo(final int position){
 
-        final FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction5.addToBackStack(null);
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading Character");
         progressDialog.show();
 
 
+        final Bundle bundle = new Bundle();
+
         //Fetching data for each position and passing it to next fragment
 
-        String url = URL_DATA + (position + 1);
+        String url = SwapiAPI.getBaseUrl() + (position + 1);
 
-        final Bundle bundle = new Bundle();
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         progressDialog.dismiss();
+
                         try {
 
                             String name = response.getString("name");
@@ -162,6 +206,11 @@ public class ListFragment extends Fragment {
                             bundle.putString("mass", mass);
                             bundle.putString("skin", skin);
                             uniqueCharacter.setArguments(bundle);
+
+                            //Need to call fragmentTransaction here, otherwise it will change fragments before fetching the data
+
+                            FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction5.addToBackStack(null);
                             fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
                             fragmentTransaction5.commit();
 
@@ -180,69 +229,16 @@ public class ListFragment extends Fragment {
         RequestQueue mQueue = Volley.newRequestQueue(getContext());
         mQueue.add(request);
 
-        // ISTO E EXECUTADO PRIMEIRO
-
-        System.out.println("yes");
-
-
-
 
     }
 
-    //Fetch the data from RESTapi and use it in the adapter
-
-    private void loadRecyclerViewData(){
-
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading List");
-        progressDialog.show();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                URL_DATA,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-
-                            JSONArray array = jsonObject.getJSONArray("results");
-
-                            for(int i = 0; i < array.length(); i++){
-                                JSONObject o = array.getJSONObject(i);
-
-                                CharacterItem characterItem = new CharacterItem(
-                                        o.getString("name"),o.getString("birth_year"),o.getString("eye_color"),o.getString("gender"),o.getString("hair_color"),o.getString("mass")
-                                ,o.getString("height"),o.getString("skin_color"),o.getString("homeworld"));
-
-                                characterArrayList.add(characterItem);
-                                arrayOfpeople.add(new CharacterRecycler(o.getString("name")));
-
-                                recyclerView.setAdapter(adapter);
-
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-                 @Override
-                 public void onErrorResponse(VolleyError error) {
-                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-
-    }
+    /* //QUERRY
+    @GET("people")
+    Call<CharacterResults> searchPeople(@Query("search") String search);
+    */
 
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
+
+
 }

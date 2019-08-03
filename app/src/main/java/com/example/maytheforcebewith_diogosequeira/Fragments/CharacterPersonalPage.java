@@ -59,7 +59,10 @@ public class CharacterPersonalPage extends Fragment {
                 if(!isToggle){
                     favouriteIcon.setImageResource(R.drawable.ic_star_black_24dp);
                     Toast.makeText(getContext(), "Added to your favourites!", Toast.LENGTH_SHORT).show();
+
+                    // I need to get all the favourite Chars in Favourites Fragment and display them in a list
                     favourites.getFavouritesList().add(new CharacterRecycler(name.toString()));
+                    System.out.println(favourites.getFavouritesList().size());
                     isToggle = true;
                 } else {
                     favouriteIcon.setImageResource(R.drawable.ic_star_border_black_24dp);
