@@ -2,12 +2,10 @@ package com.example.maytheforcebewith_diogosequeira.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,19 +30,14 @@ import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterItem;
 import com.example.maytheforcebewith_diogosequeira.Retrofit.CharacterRecycler;
 import com.example.maytheforcebewith_diogosequeira.Rest.SwapiAPIClient;
 import com.example.maytheforcebewith_diogosequeira.Rest.SwapiAPI;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 
-
 public class ListFragment extends Fragment {
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -54,7 +46,6 @@ public class ListFragment extends Fragment {
     private CharacterPersonalPage uniqueCharacter = new CharacterPersonalPage();
     private ArrayList<CharacterRecycler> recyclerViewCharacters = new ArrayList<>();
 
-    //New Part
     private EditText searchField;
     private Button submit;
     private ImageView backButton;
@@ -72,15 +63,13 @@ public class ListFragment extends Fragment {
         adapter = new RecyclerViewAdapter(recyclerViewCharacters);
 
         recyclerView.setLayoutManager(layoutManager);
-
         initComponents(view);
 
         if(!isLoaded){
             loadRecyclerViewData();
             isLoaded = true;
         }
-
-
+        
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(
                         getContext(),
@@ -88,20 +77,14 @@ public class ListFragment extends Fragment {
                         new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
-
                                loadCharacterInfo(position);
-
                             }
 
                             @Override
-                            public void onLongItemClick(View view, int position) {
-
-                            }
+                            public void onLongItemClick(View view, int position) {}
 
                             @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                            }
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {}
                         }
                 )
         );
@@ -109,7 +92,6 @@ public class ListFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 loadDataSearchBox(searchField.getText().toString());
             }
         });
@@ -120,11 +102,6 @@ public class ListFragment extends Fragment {
                 homeFragment();
             }
         });
-
-
-
-
-
         return view;
     }
 
@@ -134,9 +111,7 @@ public class ListFragment extends Fragment {
         backButton = view.findViewById(R.id.imageBack);
     }
 
-
     private void loadRecyclerViewData(){
-
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading List");
         progressDialog.show();
@@ -148,31 +123,22 @@ public class ListFragment extends Fragment {
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
-
                             JSONObject jsonObject = new JSONObject(response);
-
                             JSONArray array = jsonObject.getJSONArray("results");
-
+                            
                             for(int i = 0; i < array.length(); i++){
                                 JSONObject o = array.getJSONObject(i);
 
                                 CharacterItem characterItem = new CharacterItem(
                                         o.getString("name"),o.getString("birth_year"),o.getString("eye_color"),o.getString("gender"),o.getString("hair_color"),o.getString("mass")
                                         ,o.getString("height"),o.getString("skin_color"),o.getString("homeworld"));
-
-
                                 recyclerViewCharacters.add(new CharacterRecycler(R.drawable.r2, o.getString("name")));
-
                                 characterArrayList.add(characterItem);
-
                                 recyclerView.setAdapter(adapter);
-
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -186,32 +152,22 @@ public class ListFragment extends Fragment {
 
     }
 
-
     //Load specific Character from RecyclerView into fragment
-
     private synchronized void loadCharacterInfo(final int position){
-
-
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading Character");
         progressDialog.show();
-
-
+        
         final Bundle bundle = new Bundle();
 
         //Fetching data for each position and passing it to next fragment
-
         String url = SwapiAPI.getBaseUrl() + (position + 1);
-
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         progressDialog.dismiss();
-
                         try {
-
                             String name = response.getString("name");
                             String birthYear = response.getString("birth_year");
                             String eyeColor = response.getString("eye_color");
@@ -221,7 +177,6 @@ public class ListFragment extends Fragment {
                             String homeworld = response.getString("homeworld");
                             String mass = response.getString("mass");
                             String skin = response.getString("skin_color");
-
 
                             bundle.putString("Titulo", name);
                             bundle.putString("birth", birthYear);
@@ -237,14 +192,11 @@ public class ListFragment extends Fragment {
                             /*Need to call fragmentTransaction here, otherwise it will change fragments before fetching the data,
                                  need to figure out solution
                              */
-
-
                             nextFragment();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -255,21 +207,17 @@ public class ListFragment extends Fragment {
 
         RequestQueue mQueue = Volley.newRequestQueue(getContext());
         mQueue.add(request);
-
-
     }
 
     //New method to get data from searchBox using Retrofit instead
 
     private void loadDataSearchBox(String character) {
-
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading Character");
         progressDialog.show();
 
        final Bundle bundle = new Bundle();
-
-        Call<CharacterResults> call = SwapiAPIClient.get().searchPeople(character);
+       Call<CharacterResults> call = SwapiAPIClient.get().searchPeople(character);
 
         call.enqueue(new Callback<CharacterResults>()
         {
@@ -292,7 +240,6 @@ public class ListFragment extends Fragment {
                 String name;
 
                 if(people.results.size() > 0){
-
                     textResult = people.results.get(0).toString();
                     name = people.results.get(0).getName();
                     System.out.println(textResult);
@@ -302,13 +249,8 @@ public class ListFragment extends Fragment {
                     uniqueCharacter.setArguments(bundle);
                     nextFragment();
                 }
-
-
                 else {
-
                     Toast.makeText(getContext(),"Your request was not found!", Toast.LENGTH_SHORT).show();
-
-
                 }
             }
         });
@@ -319,21 +261,12 @@ public class ListFragment extends Fragment {
         fragmentTransaction5.addToBackStack(null);
         fragmentTransaction5.replace(R.id.main_container, uniqueCharacter);
         fragmentTransaction5.commit();
-
-
     }
 
     private void homeFragment(){
-
         FragmentTransaction fragmentTransaction5 = getActivity().getSupportFragmentManager().beginTransaction();
         fragmentTransaction5.addToBackStack(null);
         fragmentTransaction5.replace(R.id.main_container, new HomeFragment());
         fragmentTransaction5.commit();
-
     }
-
-
     }
-
-
-
